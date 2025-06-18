@@ -1,106 +1,75 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>My Family Tree</title>
-  <meta charset="utf-8">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <title>Family Tree</title>
   <style>
-    body {
-      background-color: #f9f9f9;
-      font-family: 'Segoe UI', sans-serif;
-    }
-    .tree ul {
-      padding-top: 20px; 
-      position: relative;
-    }
-
-    .tree li {
-      list-style-type: none;
-      margin: 0 auto;
-      text-align: center;
-      position: relative;
-      padding: 20px 5px 0 5px;
-    }
-
-    .tree li::before, .tree li::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      right: 50%;
-      border-top: 2px solid #ccc;
-      width: 50%;
-      height: 20px;
-    }
-
-    .tree li::after {
-      right: auto; 
-      left: 50%;
-      border-left: 2px solid #ccc;
-    }
-
-    .tree li:only-child::before, .tree li:only-child::after {
-      display: none;
-    }
-
-    .tree li:only-child {
-      padding-top: 0;
-    }
-
-    .tree li:first-child::before, .tree li:last-child::after {
-      border: none;
-    }
-
-    .tree li:last-child::before {
-      border-right: 2px solid #ccc;
-      border-radius: 0 5px 0 0;
-    }
-
-    .tree li:first-child::after {
-      border-radius: 5px 0 0 0;
-    }
-
-    .member {
-      display: inline-block;
-      padding: 10px 20px;
-      background: white;
-      color: #333;
-      border: 1px solid #ccc;
+    .family-box {
+      border: 2px solid #444;
       border-radius: 10px;
-      transition: all 0.3s;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      padding: 10px;
+      margin: 10px;
+      width: 300px;
+      background-color: #f2f2f2;
+      box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
     }
-
-    .member:hover {
-      background-color: #e0f7fa;
+    .button {
+      margin: 5px 0;
+      padding: 5px 10px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .children {
+      margin-left: 40px;
+      display: none;
     }
   </style>
 </head>
 <body>
-  <div class="container my-5">
-    <h1 class="text-center mb-4">👨‍👩‍👧‍👦 My Family Tree</h1>
 
-    <div class="tree">
-      <ul>
-        <li>
-          <div class="member">👴 Grandfather</div>
-          <ul>
-            <li>
-              <div class="member">👨 Father</div>
-              <ul>
-                <li><div class="member">🧍‍♂️ Me</div></li>
-                <li><div class="member">👧 Sister</div></li>
-              </ul>
-            </li>
-            <li>
-              <div class="member">👨‍🦱 Uncle</div>
-              <ul>
-                <li><div class="member">👦 Cousin</div></li>
-              </ul>
-            </li>
-          </ul>
-        </li>
-      </ul>
-    </div>
+  <div class="family-box">
+    <p><strong>Name:</strong> <input type="text" placeholder="Person's Name" /></p>
+    <p><strong>Partner:</strong> <input type="text" placeholder="Partner's Name" /></p>
+    <p>
+      <button class="button" onclick="addGrandparents(this)">Add Grandfather & Grandmother</button>
+    </p>
+    <p>
+      <button class="button" onclick="addChild(this)">Add Child</button>
+    </p>
+
+    <div class="children"></div>
   </div>
+
+  <script>
+    function addChild(button) {
+      const parentBox = button.closest('.family-box');
+      const childrenContainer = parentBox.querySelector('.children');
+
+      const newBox = parentBox.cloneNode(true);
+      newBox.querySelectorAll('input').forEach(input => input.value = '');
+      newBox.querySelector('.children').innerHTML = '';
+      newBox.style.marginTop = '10px';
+
+      childrenContainer.appendChild(newBox);
+      childrenContainer.style.display = 'block';
+    }
+
+    function addGrandparents(button) {
+      const parentBox = button.closest('.family-box');
+
+      if (!parentBox.querySelector('.grandparents')) {
+        const div = document.createElement('div');
+        div.classList.add('grandparents');
+        div.innerHTML = `
+          <p><strong>Grandfather:</strong> <input type="text" placeholder="Grandfather's Name" /></p>
+          <p><strong>Grandmother:</strong> <input type="text" placeholder="Grandmother's Name" /></p>
+        `;
+        parentBox.insertBefore(div, button.parentElement);
+      }
+    }
+  </script>
+
 </body>
 </html>
