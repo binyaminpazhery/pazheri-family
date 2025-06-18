@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Dynamic Family Tree</title>
+  <title>Family Tree</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -137,7 +137,7 @@
 </head>
 <body>
 
-<h2 style="text-align: center;">🌳 My Interactive Family Tree</h2>
+<h2 style="text-align: center;">🌳 Pazheri Family Tree</h2>
 
 <div class="tree" id="tree">
   <ul>
@@ -147,11 +147,7 @@
           <div class="person-fields">
             <input type="text" placeholder="Name"><br>
             <input type="date" placeholder="DOB"><br>
-            <select>
-              <option value="" disabled selected>Sex</option>
-              <option value="Male">Male</option>
-              <option value="Female">Female</option>
-            </select><br>
+            <input type="tel" placeholder="Mobile Number"><br>
             <input type="text" placeholder="Family Name"><br>
           </div>
         </div>
@@ -183,11 +179,7 @@ function addChild(button) {
         <div class="person-fields">
           <input type="text" placeholder="Name"><br>
           <input type="date" placeholder="DOB"><br>
-          <select>
-            <option value="" disabled selected>Sex</option>
-            <option value="Male">Male</option>
-            <option value="Female">Female</option>
-          </select><br>
+          <input type="tel" placeholder="Mobile Number"><br>
           <input type="text" placeholder="Family Name"><br>
         </div>
       </div>
@@ -209,11 +201,7 @@ function addPartner(button) {
   partnerFields.innerHTML = `
     <input type="text" placeholder="Name"><br>
     <input type="date" placeholder="DOB"><br>
-    <select>
-      <option value="" disabled selected>Sex</option>
-      <option value="Male">Male</option>
-      <option value="Female">Female</option>
-    </select><br>
+    <input type="tel" placeholder="Mobile Number"><br>
     <input type="text" placeholder="Family Name"><br>
   `;
   personContainer.appendChild(partnerFields);
@@ -233,11 +221,7 @@ function addParent(button) {
         <div class="person-fields">
           <input type="text" placeholder="Name"><br>
           <input type="date" placeholder="DOB"><br>
-          <select>
-            <option value="" disabled selected>Sex</option>
-            <option value="Male">Male</option>
-            <option value="Female">Female</option>
-          </select><br>
+          <input type="tel" placeholder="Mobile Number"><br>
           <input type="text" placeholder="Family Name"><br>
         </div>
       </div>
