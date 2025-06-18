@@ -3,73 +3,121 @@
 <head>
   <title>Family Tree</title>
   <style>
-    .family-box {
+    body {
+      font-family: sans-serif;
+      background: #f9f9f9;
+      text-align: center;
+    }
+
+    .tree {
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .node {
+      background: white;
       border: 2px solid #444;
       border-radius: 10px;
-      padding: 10px;
-      margin: 10px;
-      width: 300px;
-      background-color: #f2f2f2;
-      box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
+      padding: 15px;
+      margin: 20px;
+      box-shadow: 2px 2px 8px rgba(0,0,0,0.1);
+      position: relative;
+      width: 320px;
     }
-    .button {
-      margin: 5px 0;
-      padding: 5px 10px;
-      background-color: #007bff;
+
+    .node::before {
+      content: "";
+      position: absolute;
+      top: -20px;
+      left: 50%;
+      width: 2px;
+      height: 20px;
+      background: #444;
+    }
+
+    .node:first-child::before {
+      display: none;
+    }
+
+    .children {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      margin-top: 30px;
+      position: relative;
+    }
+
+    .children::before {
+      content: "";
+      position: absolute;
+      top: -20px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: #444;
+    }
+
+    .add-btn {
+      margin-top: 10px;
+      padding: 6px 10px;
+      background: #007bff;
       color: white;
       border: none;
       border-radius: 5px;
       cursor: pointer;
     }
-    .children {
-      margin-left: 40px;
-      display: none;
+
+    input {
+      margin: 5px;
+      padding: 5px;
+      width: 90%;
+    }
+
+    .info-pair {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
     }
   </style>
 </head>
 <body>
+  <h1>My Dynamic Family Tree</h1>
 
-  <div class="family-box">
-    <p><strong>Name:</strong> <input type="text" placeholder="Person's Name" /></p>
-    <p><strong>Partner:</strong> <input type="text" placeholder="Partner's Name" /></p>
-    <p>
-      <button class="button" onclick="addGrandparents(this)">Add Grandfather & Grandmother</button>
-    </p>
-    <p>
-      <button class="button" onclick="addChild(this)">Add Child</button>
-    </p>
-
-    <div class="children"></div>
+  <div class="tree" id="tree">
+    <!-- Root node -->
+    <div class="node">
+      <div class="info-pair">
+        <label><strong>Father:</strong> <input type="text" placeholder="Name, DOB, Sex"></label>
+        <label><strong>Mother:</strong> <input type="text" placeholder="Name, DOB, Sex"></label>
+      </div>
+      <button class="add-btn" onclick="addChild(this)">Add Child</button>
+      <div class="children"></div>
+    </div>
   </div>
 
   <script>
     function addChild(button) {
-      const parentBox = button.closest('.family-box');
-      const childrenContainer = parentBox.querySelector('.children');
+      const parentNode = button.closest(".node");
+      const childrenContainer = parentNode.querySelector(".children");
 
-      const newBox = parentBox.cloneNode(true);
-      newBox.querySelectorAll('input').forEach(input => input.value = '');
-      newBox.querySelector('.children').innerHTML = '';
-      newBox.style.marginTop = '10px';
+      // Create new child node
+      const newNode = document.createElement("div");
+      newNode.className = "node";
+      newNode.innerHTML = `
+        <div class="info-pair">
+          <label><strong>Father:</strong> <input type="text" placeholder="Name, DOB, Sex"></label>
+          <label><strong>Mother:</strong> <input type="text" placeholder="Name, DOB, Sex"></label>
+        </div>
+        <button class="add-btn" onclick="addChild(this)">Add Child</button>
+        <div class="children"></div>
+      `;
 
-      childrenContainer.appendChild(newBox);
-      childrenContainer.style.display = 'block';
-    }
-
-    function addGrandparents(button) {
-      const parentBox = button.closest('.family-box');
-
-      if (!parentBox.querySelector('.grandparents')) {
-        const div = document.createElement('div');
-        div.classList.add('grandparents');
-        div.innerHTML = `
-          <p><strong>Grandfather:</strong> <input type="text" placeholder="Grandfather's Name" /></p>
-          <p><strong>Grandmother:</strong> <input type="text" placeholder="Grandmother's Name" /></p>
-        `;
-        parentBox.insertBefore(div, button.parentElement);
-      }
+      // Add new node under the parent
+      childrenContainer.appendChild(newNode);
     }
   </script>
-
 </body>
 </html>
