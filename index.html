@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -82,6 +81,24 @@
       box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
     }
 
+    .person-container {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .person-fields, .partner-fields {
+      flex: 1;
+      min-width: 180px;
+    }
+
+    .partner-fields {
+      background: #f9f9f9;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #666;
+    }
+
     .box input, .box select {
       width: 95%;
       margin: 3px 0;
@@ -113,11 +130,8 @@
       background: #dc3545;
     }
 
-    .partner-container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 10px;
+    .hidden {
+      display: none;
     }
   </style>
 </head>
@@ -128,8 +142,45 @@
 <div class="tree" id="tree">
   <ul>
     <li>
-      <div class="partner-container">
-        <div class="box">
+      <div class="box">
+        <div class="person-container">
+          <div class="person-fields">
+            <input type="text" placeholder="Name"><br>
+            <input type="date" placeholder="DOB"><br>
+            <select>
+              <option value="" disabled selected>Sex</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+            </select><br>
+            <input type="text" placeholder="Family Name"><br>
+          </div>
+        </div>
+        <button class="add-btn add-child-btn" onclick="addChild(this)">Add Child</button>
+        <button class="add-btn add-partner-btn" onclick="addPartner(this)">Add Partner</button>
+        <button class="add-btn add-parent-btn" onclick="addParent(this)">Add Parent</button>
+        <button class="add-btn delete-btn" onclick="deleteNode(this)">Delete</button>
+      </div>
+      <ul></ul>
+    </li>
+  </ul>
+</div>
+
+<script>
+function isRootNode(li) {
+  // A node is root if its parent is the top-level <ul> inside #tree
+  const parentUl = li.parentElement;
+  return parentUl && parentUl.parentElement.id === 'tree';
+}
+
+function addChild(button) {
+  const currentLi = button.closest('li');
+  const childrenUl = currentLi.querySelector('ul');
+
+  const li = document.createElement('li');
+  li.innerHTML = `
+    <div class="box">
+      <div class="person-container">
+        <div class="person-fields">
           <input type="text" placeholder="Name"><br>
           <input type="date" placeholder="DOB"><br>
           <select>
@@ -138,39 +189,11 @@
             <option value="Female">Female</option>
           </select><br>
           <input type="text" placeholder="Family Name"><br>
-          <button class="add-btn add-child-btn" onclick="addChild(this)">Add Child</button>
-          <button class="add-btn add-partner-btn" onclick="addPartner(this)">Add Partner</button>
-          <button class="add-btn add-parent-btn" onclick="addParent(this)">Add Parent</button>
-          <button class="add-btn delete-btn" onclick="deleteNode(this)">Delete</button>
         </div>
       </div>
-      <ul></ul>
-    </li>
-  </ul>
-</div>
-
-<script>
-function addChild(button) {
-  const currentLi = button.closest('li');
-  const childrenUl = currentLi.querySelector('ul');
-
-  const li = document.createElement('li');
-  li.innerHTML = `
-    <div class="partner-container">
-      <div class="box">
-        <input type="text" placeholder="Name"><br>
-        <input type="date" placeholder="DOB"><br>
-        <select>
-          <option value="" disabled selected>Sex</option>
-          <option value="Male">Male</option>
-          <option value="Female">Female</option>
-        </select><br>
-        <input type="text" placeholder="Family Name"><br>
-        <button class="add-btn add-child-btn" onclick="addChild(this)">Add Child</button>
-        <button class="add-btn add-partner-btn" onclick="addPartner(this)">Add Partner</button>
-        <button class="add-btn add-parent-btn" onclick="addParent(this)">Add Parent</button>
-        <button class="add-btn delete-btn" onclick="deleteNode(this)">Delete</button>
-      </div>
+      <button class="add-btn add-child-btn" onclick="addChild(this)">Add Child</button>
+      <button class="add-btn add-partner-btn" onclick="addPartner(this)">Add Partner</button>
+      <button class="add-btn delete-btn" onclick="deleteNode(this)">Delete</button>
     </div>
     <ul></ul>
   `;
@@ -179,10 +202,11 @@ function addChild(button) {
 }
 
 function addPartner(button) {
-  const partnerContainer = button.closest('.partner-container');
-  const box = document.createElement('div');
-  box.className = 'box';
-  box.innerHTML = `
+  const box = button.closest('.box');
+  const personContainer = box.querySelector('.person-container');
+  const partnerFields = document.createElement('div');
+  partnerFields.className = 'partner-fields';
+  partnerFields.innerHTML = `
     <input type="text" placeholder="Name"><br>
     <input type="date" placeholder="DOB"><br>
     <select>
@@ -191,12 +215,9 @@ function addPartner(button) {
       <option value="Female">Female</option>
     </select><br>
     <input type="text" placeholder="Family Name"><br>
-    <button class="add-btn add-child-btn" onclick="addChild(this)">Add Child</button>
-    <button class="add-btn add-partner-btn" onclick="addPartner(this)">Add Partner</button>
-    <button class="add-btn add-parent-btn" onclick="addParent(this)">Add Parent</button>
-    <button class="add-btn delete-btn" onclick="deleteNode(this)">Delete</button>
   `;
-  partnerContainer.appendChild(box);
+  personContainer.appendChild(partnerFields);
+  button.classList.add('hidden');
 }
 
 function addParent(button) {
@@ -204,33 +225,33 @@ function addParent(button) {
   const currentUl = currentLi.parentElement;
   const parentLi = currentUl.parentElement.closest('li');
 
-  // Create new parent li
   const newParentLi = document.createElement('li');
+  const hasParent = !isRootNode(currentLi);
   newParentLi.innerHTML = `
-    <div class="partner-container">
-      <div class="box">
-        <input type="text" placeholder="Name"><br>
-        <input type="date" placeholder="DOB"><br>
-        <select>
-          <option value="" disabled selected>Sex</option>
-          <option value="Male">Male</option>
-          <option value="Female">Female</option>
-        </select><br>
-        <input type="text" placeholder="Family Name"><br>
-        <button class="add-btn add-child-btn" onclick="addChild(this)">Add Child</button>
-        <button class="add-btn add-partner-btn" onclick="addPartner(this)">Add Partner</button>
-        <button class="add-btn add-parent-btn" onclick="addParent(this)">Add Parent</button>
-        <button class="add-btn delete-btn" onclick="deleteNode(this)">Delete</button>
+    <div class="box">
+      <div class="person-container">
+        <div class="person-fields">
+          <input type="text" placeholder="Name"><br>
+          <input type="date" placeholder="DOB"><br>
+          <select>
+            <option value="" disabled selected>Sex</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+          </select><br>
+          <input type="text" placeholder="Family Name"><br>
+        </div>
       </div>
+      <button class="add-btn add-child-btn" onclick="addChild(this)">Add Child</button>
+      <button class="add-btn add-partner-btn" onclick="addPartner(this)">Add Partner</button>
+      ${hasParent ? '' : '<button class="add-btn add-parent-btn" onclick="addParent(this)">Add Parent</button>'}
+      <button class="add-btn delete-btn" onclick="deleteNode(this)">Delete</button>
     </div>
     <ul></ul>
   `;
 
-  // Move current ul to new parent
   const newParentUl = newParentLi.querySelector('ul');
   newParentUl.appendChild(currentLi);
 
-  // Replace current li with new parent li
   if (parentLi) {
     const parentUl = parentLi.querySelector('ul');
     parentUl.replaceChild(newParentLi, currentLi);
@@ -241,27 +262,27 @@ function addParent(button) {
     tree.innerHTML = '';
     tree.appendChild(newUl);
   }
+
+  button.classList.add('hidden');
 }
 
 function deleteNode(button) {
   const box = button.closest('.box');
-  const partnerContainer = box.closest('.partner-container');
   const li = button.closest('li');
+  const partnerFields = box.querySelector('.partner-fields');
 
-  if (partnerContainer.childElementCount > 1) {
-    // Delete only the box if there are multiple boxes in the partner container
-    if (confirm("Are you sure you want to delete this person?")) {
-      box.remove();
+  if (partnerFields && confirm("Are you sure you want to delete the partner?")) {
+    partnerFields.remove();
+    // Show Add Partner button again if partner is deleted
+    const addPartnerBtn = box.querySelector('.add-partner-btn');
+    if (addPartnerBtn) {
+      addPartnerBtn.classList.remove('hidden');
     }
-  } else {
-    // Delete the entire li if it's the only box
-    if (li && confirm("Are you sure you want to delete this person and their descendants?")) {
-      li.remove();
-    }
+  } else if (li && confirm("Are you sure you want to delete this person and their descendants?")) {
+    li.remove();
   }
 }
 </script>
 
 </body>
 </html>
-```
