@@ -1,63 +1,90 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Family Tree</title>
+  <meta charset="UTF-8">
+  <title>Dynamic Family Tree</title>
   <style>
     body {
-      font-family: sans-serif;
-      background: #f9f9f9;
-      text-align: center;
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      margin: 0;
+      padding: 20px;
     }
 
     .tree {
       display: flex;
       justify-content: center;
-      flex-direction: column;
-      align-items: center;
-      padding: 20px;
+      margin-top: 50px;
     }
 
-    .node {
-      background: white;
-      border: 2px solid #444;
-      border-radius: 10px;
-      padding: 15px;
-      margin: 20px;
-      box-shadow: 2px 2px 8px rgba(0,0,0,0.1);
+    .tree ul {
+      padding-top: 20px;
       position: relative;
-      width: 320px;
+      display: flex;
+      justify-content: center;
     }
 
-    .node::before {
-      content: "";
+    .tree li {
+      list-style-type: none;
+      text-align: center;
+      position: relative;
+      padding: 20px 5px 0 5px;
+    }
+
+    /* draw connectors */
+    .tree li::before, .tree li::after {
+      content: '';
       position: absolute;
-      top: -20px;
-      left: 50%;
-      width: 2px;
+      top: 0;
+      width: 50%;
       height: 20px;
-      background: #444;
+      border-top: 2px solid #444;
     }
 
-    .node:first-child::before {
+    .tree li::before {
+      right: 50%;
+      border-right: 2px solid #444;
+    }
+
+    .tree li::after {
+      left: 50%;
+      border-left: 2px solid #444;
+    }
+
+    .tree li:only-child::before, .tree li:only-child::after {
       display: none;
     }
 
-    .children {
-      display: flex;
-      justify-content: center;
-      gap: 40px;
-      margin-top: 30px;
-      position: relative;
+    .tree li:only-child {
+      padding-top: 0;
     }
 
-    .children::before {
-      content: "";
-      position: absolute;
-      top: -20px;
-      left: 0;
-      right: 0;
-      height: 2px;
-      background: #444;
+    .tree li:first-child::before, .tree li:last-child::after {
+      border: none;
+    }
+
+    .tree li:first-child::after {
+      border-radius: 0 5px 0 0;
+    }
+
+    .tree li:last-child::before {
+      border-radius: 5px 0 0 0;
+    }
+
+    .box {
+      background: #fff;
+      padding: 15px;
+      border-radius: 10px;
+      border: 2px solid #444;
+      display: inline-block;
+      min-width: 250px;
+      box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .box input {
+      width: 95%;
+      margin: 3px 0;
+      padding: 5px;
     }
 
     .add-btn {
@@ -69,55 +96,44 @@
       border-radius: 5px;
       cursor: pointer;
     }
-
-    input {
-      margin: 5px;
-      padding: 5px;
-      width: 90%;
-    }
-
-    .info-pair {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-    }
   </style>
 </head>
 <body>
-  <h1>My Dynamic Family Tree</h1>
 
-  <div class="tree" id="tree">
-    <!-- Root node -->
-    <div class="node">
-      <div class="info-pair">
-        <label><strong>Father:</strong> <input type="text" placeholder="Name, DOB, Sex"></label>
-        <label><strong>Mother:</strong> <input type="text" placeholder="Name, DOB, Sex"></label>
-      </div>
-      <button class="add-btn" onclick="addChild(this)">Add Child</button>
-      <div class="children"></div>
-    </div>
-  </div>
+<h2 style="text-align: center;">🌳 My Interactive Family Tree</h2>
 
-  <script>
-    function addChild(button) {
-      const parentNode = button.closest(".node");
-      const childrenContainer = parentNode.querySelector(".children");
-
-      // Create new child node
-      const newNode = document.createElement("div");
-      newNode.className = "node";
-      newNode.innerHTML = `
-        <div class="info-pair">
-          <label><strong>Father:</strong> <input type="text" placeholder="Name, DOB, Sex"></label>
-          <label><strong>Mother:</strong> <input type="text" placeholder="Name, DOB, Sex"></label>
-        </div>
+<div class="tree" id="tree">
+  <ul>
+    <li>
+      <div class="box">
+        <label>Father: <input type="text" placeholder="Name, DOB, Sex"></label><br>
+        <label>Mother: <input type="text" placeholder="Name, DOB, Sex"></label><br>
+        <label>Partner: <input type="text" placeholder="Partner Name"></label><br>
         <button class="add-btn" onclick="addChild(this)">Add Child</button>
-        <div class="children"></div>
-      `;
+      </div>
+      <ul></ul>
+    </li>
+  </ul>
+</div>
 
-      // Add new node under the parent
-      childrenContainer.appendChild(newNode);
-    }
-  </script>
+<script>
+function addChild(button) {
+  const currentBox = button.closest('li');
+  const childrenUL = currentBox.querySelector('ul');
+
+  const li = document.createElement('li');
+  li.innerHTML = `
+    <div class="box">
+      <label>Father: <input type="text" placeholder="Name, DOB, Sex"></label><br>
+      <label>Mother: <input type="text" placeholder="Name, DOB, Sex"></label><br>
+      <label>Partner: <input type="text" placeholder="Partner Name"></label><br>
+      <button class="add-btn" onclick="addChild(this)">Add Child</button>
+    </div>
+    <ul></ul>
+  `;
+  childrenUL.appendChild(li);
+}
+</script>
+
 </body>
 </html>
