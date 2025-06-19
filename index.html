@@ -4,166 +4,208 @@
   <meta charset="UTF-8">
   <title>Family Tree</title>
   <style>
-	body {
-  	font-family: Arial, sans-serif;
-  	background: #f4f4f4;
-  	margin: 0;
-  	padding: 20px;
-	}
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #6dd5fa 100%);
+      background-attachment: fixed;
+      color: #333;
+      position: relative;
+      overflow-x: hidden;
+    }
 
-	.tree {
-  	display: flex;
-  	justify-content: center;
-  	margin-top: 50px;
-	}
+    /* Subtle overlay pattern */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 70%, transparent 100%);
+      z-index: -1;
+      opacity: 0.6;
+    }
 
-	.tree ul {
-  	padding-top: 20px;
-  	position: relative;
-  	display: flex;
-  	justify-content: center;
-	}
+    h2 {
+      color: #fff;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+      text-align: center;
+      font-size: 2.2em;
+      margin-bottom: 20px;
+    }
 
-	.tree li {
-  	list-style-type: none;
-  	text-align: center;
-  	position: relative;
-  	padding: 20px 5px 0 5px;
-	}
+    .tree {
+      display: flex;
+      justify-content: center;
+      margin-top: 50px;
+    }
 
-	/* Draw connectors */
-	.tree li::before, .tree li::after {
-  	content: '';
-  	position: absolute;
-  	top: 0;
-  	width: 50%;
-  	height: 20px;
-  	border-top: 2px solid #444;
-	}
+    .tree ul {
+      padding-top: 20px;
+      position: relative;
+      display: flex;
+      justify-content: center;
+    }
 
-	.tree li::before {
-  	right: 50%;
-  	border-right: 2px solid #444;
-	}
+    .tree li {
+      list-style-type: none;
+      text-align: center;
+      position: relative;
+      padding: 20px 5px 0 5px;
+    }
 
-	.tree li::after {
-  	left: 50%;
-  	border-left: 2px solid #444;
-	}
+    /* Draw connectors */
+    .tree li::before, .tree li::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      width: 50%;
+      height: 20px;
+      border-top: 2px solid #fff;
+    }
 
-	.tree li:only-child::before, .tree li:only-child::after {
-  	display: none;
-	}
+    .tree li::before {
+      right: 50%;
+      border-right: 2px solid #fff;
+    }
 
-	.tree li:only-child {
-  	padding-top: 0;
-	}
+    .tree li::after {
+      left: 50%;
+      border-left: 2px solid #fff;
+    }
 
-	.tree li:first-child::before, .tree li:last-child::after {
-  	border: none;
-	}
+    .tree li:only-child::before, .tree li:only-child::after {
+      display: none;
+    }
 
-	.tree li:first-child::after {
-  	border-radius: 0 5px 0 0;
-	}
+    .tree li:only-child {
+      padding-top: 0;
+    }
 
-	.tree li:last-child::before {
-  	border-radius: 5px 0 0 0;
-	}
+    .tree li:first-child::before, .tree li:last-child::after {
+      border: none;
+    }
 
-	.box {
-  	background: #fff;
-  	padding: 15px;
-  	border-radius: 10px;
-  	border: 2px solid #444;
-  	display: inline-block;
-  	min-width: 200px;
-  	box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
-	}
+    .tree li:first-child::after {
+      border-radius: 0 5px 0 0;
+    }
 
-	.person-container {
-  	display: flex;
-  	gap: 10px;
-  	flex-wrap: wrap;
-	}
+    .tree li:last-child::before {
+      border-radius: 5px 0 0 0;
+    }
 
-	.person-fields, .partner-fields {
-  	flex: 1;
-  	min-width: 180px;
-	}
+    .box {
+      background: rgba(255, 255, 255, 0.9);
+      padding: 20px;
+      border-radius: 15px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      display: inline-block;
+      min-width: 220px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
 
-	.partner-fields {
-  	background: #f9f9f9;
-  	padding: 10px;
-  	border-radius: 8px;
-  	border: 1px solid #666;
-	}
+    .box:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+    }
 
-	.box input, .box select {
-  	width: 95%;
-  	margin: 3px 0;
-  	padding: 5px;
-	}
+    .person-container {
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
 
-	.add-btn {
-  	margin: 5px 2px;
-  	padding: 6px 10px;
-  	color: white;
-  	border: none;
-  	border-radius: 5px;
-  	cursor: pointer;
-	}
+    .person-fields, .partner-fields {
+      flex: 1;
+      min-width: 180px;
+    }
 
-	.add-child-btn {
-  	background: #007bff;
-	}
+    .partner-fields {
+      background: rgba(240, 240, 240, 0.8);
+      padding: 12px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.5);
+    }
 
-	.add-partner-btn {
-  	background: #28a745;
-	}
+    .box input, .box select {
+      width: 95%;
+      margin: 5px 0;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      background: rgba(255, 255, 255, 0.7);
+      font-size: 14px;
+    }
 
-	.add-parent-btn {
-  	background: #ffc107;
-	}
+    .add-btn {
+      margin: 6px 3px;
+      padding: 8px 12px;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background 0.3s ease, transform 0.2s ease;
+    }
 
-	.delete-btn {
-  	background: #dc3545;
-	}
+    .add-btn:hover {
+      transform: scale(1.05);
+    }
 
-	.hidden {
-  	display: none;
-	}
+    .add-child-btn {
+      background: #0288d1;
+    }
+
+    .add-partner-btn {
+      background: #2e7d32;
+    }
+
+    .add-parent-btn {
+      background: #f57c00;
+    }
+
+    .delete-btn {
+      background: #d32f2f;
+    }
+
+    .hidden {
+      display: none;
+    }
   </style>
 </head>
 <body>
 
-<h2 style="text-align: center;">🌳 Pazheri Family Tree</h2>
+<h2>🌳 Pazheri Family Tree</h2>
 
 <div class="tree" id="tree">
   <ul>
-	<li>
-  	<div class="box">
-    	<div class="person-container">
-      	<div class="person-fields">
-        	<input type="text" placeholder="Name"><br>
-        	<input type="date" placeholder="DOB"><br>
-        	<input type="tel" placeholder="Mobile Number"><br>
-        	<input type="text" placeholder="Family Name"><br>
-      	</div>
-    	</div>
-    	<button class="add-btn add-child-btn" onclick="addChild(this)">Add Child</button>
-    	<button class="add-btn add-partner-btn" onclick="addPartner(this)">Add Partner</button>
-    	<button class="add-btn add-parent-btn" onclick="addParent(this)">Add Parent</button>
-    	<button class="add-btn delete-btn" onclick="deleteNode(this)">Delete</button>
-  	</div>
-  	<ul></ul>
-	</li>
+    <li>
+      <div class="box">
+        <div class="person-container">
+          <div class="person-fields">
+            <input type="text" placeholder="Name"><br>
+            <input type="date" placeholder="DOB"><br>
+            <input type="tel" placeholder="Mobile Number"><br>
+            <input type="text" placeholder="Family Name"><br>
+          </div>
+        </div>
+        <button class="add-btn add-child-btn" onclick="addChild(this)">Add Child</button>
+        <button class="add-btn add-partner-btn" onclick="addPartner(this)">Add Partner</button>
+        <button class="add-btn add-parent-btn" onclick="addParent(this)">Add Parent</button>
+        <button class="add-btn delete-btn" onclick="deleteNode(this)">Delete</button>
+      </div>
+      <ul></ul>
+    </li>
   </ul>
 </div>
 
 <script>
 function isRootNode(li) {
-  // A node is root if its parent is the top-level <ul> inside #tree
   const parentUl = li.parentElement;
   return parentUl && parentUl.parentElement.id === 'tree';
 }
@@ -174,20 +216,20 @@ function addChild(button) {
 
   const li = document.createElement('li');
   li.innerHTML = `
-	<div class="box">
-  	<div class="person-container">
-    	<div class="person-fields">
-      	<input type="text" placeholder="Name"><br>
-      	<input type="date" placeholder="DOB"><br>
-      	<input type="tel" placeholder="Mobile Number"><br>
-      	<input type="text" placeholder="Family Name"><br>
-    	</div>
-  	</div>
-  	<button class="add-btn add-child-btn" onclick="addChild(this)">Add Child</button>
-  	<button class="add-btn add-partner-btn" onclick="addPartner(this)">Add Partner</button>
-  	<button class="add-btn delete-btn" onclick="deleteNode(this)">Delete</button>
-	</div>
-	<ul></ul>
+    <div class="box">
+      <div class="person-container">
+        <div class="person-fields">
+          <input type="text" placeholder="Name"><br>
+          <input type="date" placeholder="DOB"><br>
+          <input type="tel" placeholder="Mobile Number"><br>
+          <input type="text" placeholder="Family Name"><br>
+        </div>
+      </div>
+      <button class="add-btn add-child-btn" onclick="addChild(this)">Add Child</button>
+      <button class="add-btn add-partner-btn" onclick="addPartner(this)">Add Partner</button>
+      <button class="add-btn delete-btn" onclick="deleteNode(this)">Delete</button>
+    </div>
+    <ul></ul>
   `;
 
   childrenUl.appendChild(li);
@@ -199,10 +241,10 @@ function addPartner(button) {
   const partnerFields = document.createElement('div');
   partnerFields.className = 'partner-fields';
   partnerFields.innerHTML = `
-	<input type="text" placeholder="Name"><br>
-	<input type="date" placeholder="DOB"><br>
-	<input type="tel" placeholder="Mobile Number"><br>
-	<input type="text" placeholder="Family Name"><br>
+    <input type="text" placeholder="Name"><br>
+    <input type="date" placeholder="DOB"><br>
+    <input type="tel" placeholder="Mobile Number"><br>
+    <input type="text" placeholder="Family Name"><br>
   `;
   personContainer.appendChild(partnerFields);
   button.classList.add('hidden');
@@ -216,35 +258,35 @@ function addParent(button) {
   const newParentLi = document.createElement('li');
   const hasParent = !isRootNode(currentLi);
   newParentLi.innerHTML = `
-	<div class="box">
-  	<div class="person-container">
-    	<div class="person-fields">
-      	<input type="text" placeholder="Name"><br>
-      	<input type="date" placeholder="DOB"><br>
-      	<input type="tel" placeholder="Mobile Number"><br>
-      	<input type="text" placeholder="Family Name"><br>
-    	</div>
-  	</div>
-  	<button class="add-btn add-child-btn" onclick="addChild(this)">Add Child</button>
-  	<button class="add-btn add-partner-btn" onclick="addPartner(this)">Add Partner</button>
-  	${hasParent ? '' : '<button class="add-btn add-parent-btn" onclick="addParent(this)">Add Parent</button>'}
-  	<button class="add-btn delete-btn" onclick="deleteNode(this)">Delete</button>
-	</div>
-	<ul></ul>
+    <div class="box">
+      <div class="person-container">
+        <div class="person-fields">
+          <input type="text" placeholder="Name"><br>
+          <input type="date" placeholder="DOB"><br>
+          <input type="tel" placeholder="Mobile Number"><br>
+          <input type="text" placeholder="Family Name"><br>
+        </div>
+      </div>
+      <button class="add-btn add-child-btn" onclick="addChild(this)">Add Child</button>
+      <button class="add-btn add-partner-btn" onclick="addPartner(this)">Add Partner</button>
+      ${hasParent ? '' : '<button class="add-btn add-parent-btn" onclick="addParent(this)">Add Parent</button>'}
+      <button class="add-btn delete-btn" onclick="deleteNode(this)">Delete</button>
+    </div>
+    <ul></ul>
   `;
 
   const newParentUl = newParentLi.querySelector('ul');
   newParentUl.appendChild(currentLi);
 
   if (parentLi) {
-	const parentUl = parentLi.querySelector('ul');
-	parentUl.replaceChild(newParentLi, currentLi);
+    const parentUl = parentLi.querySelector('ul');
+    parentUl.replaceChild(newParentLi, currentLi);
   } else {
-	const tree = document.getElementById('tree');
-	const newUl = document.createElement('ul');
-	newUl.appendChild(newParentLi);
-	tree.innerHTML = '';
-	tree.appendChild(newUl);
+    const tree = document.getElementById('tree');
+    const newUl = document.createElement('ul');
+    newUl.appendChild(newParentLi);
+    tree.innerHTML = '';
+    tree.appendChild(newUl);
   }
 
   button.classList.add('hidden');
@@ -256,14 +298,13 @@ function deleteNode(button) {
   const partnerFields = box.querySelector('.partner-fields');
 
   if (partnerFields && confirm("Are you sure you want to delete the partner?")) {
-	partnerFields.remove();
-	// Show Add Partner button again if partner is deleted
-	const addPartnerBtn = box.querySelector('.add-partner-btn');
-	if (addPartnerBtn) {
-  	addPartnerBtn.classList.remove('hidden');
-	}
+    partnerFields.remove();
+    const addPartnerBtn = box.querySelector('.add-partner-btn');
+    if (addPartnerBtn) {
+      addPartnerBtn.classList.remove('hidden');
+    }
   } else if (li && confirm("Are you sure you want to delete this person and their descendants?")) {
-	li.remove();
+    li.remove();
   }
 }
 </script>
